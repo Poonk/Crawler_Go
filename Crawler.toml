@@ -1,0 +1,4 @@
+[mysql]
+datasource = "@tcp(localhost:3306)/test?charset=utf8"
+user = "root"
+passwd = "root"
