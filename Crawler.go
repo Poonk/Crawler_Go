@@ -2,7 +2,6 @@ package main
 
 import (
 	"net/http"
-	"time"
 
 	"github.com/PuerkitoBio/goquery"
 
@@ -43,39 +42,75 @@ func download(url string) {
 	// 	logs.Error(err)
 	// }
 
+	// name := url[32:37]
+	// logs.Debug(name)
+	// f, err := os.Create(name + ".csv")
+	// if err != nil {
+	// 	logs.Error(err)
+	// }
+	// defer f.Close()
+
+	// f.WriteString("\xEF\xBB\xBF")
+	// w := csv.NewWriter(f)
+
+	// data := &protocol.Basicdata{}
+
 	doc, err := goquery.NewDocumentFromResponse(res)
+	// doc, err := goquery.NewDocumentFromReader(strings.NewReader(url))
 	if err != nil {
 		logs.Error(err)
 	}
-	logs.Debug(doc)
+	logs.Debug(doc.Text())
 
-	doc.Find(".m_content .m_cont_3 .sub_cont_3 .company_details").Each(func(index int, content *goquery.Selection) {
+	doc.Find("body>div>.in_squote").Each(func(index int, content *goquery.Selection) {
 		logs.Debug(content.Text())
-
-		size := content.Find("dd").Length()
-		logs.Debug(size)
-		for i := 0; i < size; i++ {
-			tm := content.Find("dt").Eq(i).Text()
-			logs.Debug(tm)
-			tmp := content.Find("dd").Eq(i).Text()
-			logs.Debug(tmp)
-		}
-		// tmp := content.Find("dd").Text()
-		// logs.Debug(tmp)
-		// tmp = content.Find(".company_details title").Text()
-		// logs.Debug(tmp)
-		// logs.Debug("ttt")
-		// title := content.Find(".jk").Text()
-		// open := content.Find(".jk .topenprice").Text()
-		// logs.Debug("Movie %d : %s\n", index, title)
-		// err := ioutil.WriteFile("douban.txt", []byte(title), 0644)
-		// if err != nil {
-		// 	logs.Error(err)
-		// }
-		// file.Write([]byte(title + "\n"))
-		// logs.Debug(title + "\t" + open)
-		time.Sleep(time.Second * 2)
 	})
+
+	// doc.Find(".m_content .m_cont_3 .sub_cont_3 .company_details").Each(func(index int, content *goquery.Selection) {
+	// 	// logs.Debug(content.Text())
+
+	// 	size := content.Find("dd").Length()
+	// 	logs.Debug(size)
+	// 	for i := 0; i < size; i++ {
+	// 		tm := content.Find("dt").Eq(i).Text()
+	// 		logs.Debug(tm)
+	// 		logs.Debug(utf8.RuneCountInString(tm))
+	// 		tmp := content.Find("dd").Eq(i).Text()
+	// 		logs.Debug(tmp)
+
+	// 		len := utf8.RuneCountInString(tmp)
+	// 		if tm == "总股本：" {
+	// 			// logs.Debug(tmp[:len-1])
+	// 			num, _ := strconv.ParseFloat(tmp[:len-1], 64)
+	// 			// logs.Debug(num)
+	// 			data.CapitalAmount = num
+	// 		} else if tm == "流通股：" {
+	// 			num, _ := strconv.ParseFloat(tmp[:len-1], 64)
+	// 			data.FloatingStocks = num
+	// 		} else if tm == "每股收益：" {
+	// 			num, _ := strconv.ParseFloat(tmp[:len-1], 64)
+	// 			data.EPS = num
+	// 		}
+	// 	}
+	// 	logs.Debug(data)
+
+	// 	// tmp := content.Find("dd").Text()
+	// 	// logs.Debug(tmp)
+	// 	// tmp = content.Find(".company_details title").Text()
+	// 	// logs.Debug(tmp)
+	// 	// logs.Debug("ttt")
+	// 	// title := content.Find(".jk").Text()
+	// 	// open := content.Find(".jk .topenprice").Text()
+	// 	// logs.Debug("Movie %d : %s\n", index, title)
+	// 	// err := ioutil.WriteFile("douban.txt", []byte(title), 0644)
+	// 	// if err != nil {
+	// 	// 	logs.Error(err)
+	// 	// }
+	// 	// file.Write([]byte(title + "\n"))
+	// 	// logs.Debug(title + "\t" + open)
+	// 	time.Sleep(time.Second * 2)
+	// })
+
 	// doc.Find(".sidebar-reviews article .content-block").Each(func(index int, content *goquery.Selection) {
 	// 	band := content.Find("a").Text()
 	// 	tilte := content.Find("i").Text()
@@ -86,11 +121,38 @@ func download(url string) {
 
 }
 
+// func storeToCsv(filename string, posts map[int]*Post) {
+// 	// 创建文件
+// 	csvFile, err := os.Create(filename)
+// 	if err != nil {
+// 		panic(err)
+// 	}
+// 	defer csvFile.Close()
+
+// 	// 获取csv的Writer
+// 	writer := csv.NewWriter(csvFile)
+
+// 	// 将map中的Post转换成slice，因为csv的Write需要slice参数
+// 	// 并写入csv文件
+// 	for _, post := range posts {
+// 		record := []string{strconv.Itoa(post.Id), post.Content, post.Author}
+// 		err1 := writer.Write(record)
+// 		if err1 != nil {
+// 			panic(err1)
+// 		}
+// 	}
+
+// 	// 确保所有内存数据刷到csv文件
+// 	writer.Flush()
+// }
+
 func main() {
 	logs.EnableFuncCallDepth(true)
 	logs.SetLogFuncCallDepth(3)
 
 	url := "http://stockpage.10jqka.com.cn/000001/#gegugp_zjjp"
+	// url := "http://stockpage.10jqka.com.cn/realHead_v2.html#hs_000001"
+	// url := "http://stockpage.10jqka.com.cn/realHead_v2.html"
 
 	download(url)
 
