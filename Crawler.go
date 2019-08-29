@@ -11,6 +11,8 @@ import (
 func download(url string) {
 	client := &http.Client{}
 	req, _ := http.NewRequest("GET", url, nil)
+	req.Header.Add("X-Xsrftoken", "b6d695bbdcd111e8b681002324e63af81")
+	req.Header.Add("Cookie", "sessionid=5edb1f18c5a0cb334b42b2383c899e01")
 	req.Header.Set("User-Agent", "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)")
 
 	res, err := client.Do(req)
@@ -62,9 +64,9 @@ func download(url string) {
 	}
 	logs.Debug(doc.Text())
 
-	doc.Find("body>div>.in_squote").Each(func(index int, content *goquery.Selection) {
-		logs.Debug(content.Text())
-	})
+	// doc.Find("body div>.in_squote").Each(func(index int, content *goquery.Selection) {
+	// 	logs.Debug(content.Text())
+	// })
 
 	// doc.Find(".m_content .m_cont_3 .sub_cont_3 .company_details").Each(func(index int, content *goquery.Selection) {
 	// 	// logs.Debug(content.Text())
@@ -150,9 +152,10 @@ func main() {
 	logs.EnableFuncCallDepth(true)
 	logs.SetLogFuncCallDepth(3)
 
-	url := "http://stockpage.10jqka.com.cn/000001/#gegugp_zjjp"
+	// url := "http://stockpage.10jqka.com.cn/000001/#gegugp_zjjp"
 	// url := "http://stockpage.10jqka.com.cn/realHead_v2.html#hs_000001"
 	// url := "http://stockpage.10jqka.com.cn/realHead_v2.html"
+	url := "http://d.10jqka.com.cn/v2/realhead/hs_000001/"
 
 	download(url)
 
