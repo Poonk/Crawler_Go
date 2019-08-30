@@ -12,7 +12,6 @@ import (
 
 	"github.com/PuerkitoBio/goquery"
 	"github.com/golang/glog"
-	"github.com/tealeg/xlsx"
 )
 
 type movie struct {
